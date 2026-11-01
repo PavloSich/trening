@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Журнал тренувань</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f6f3;--cd:#fff;--tx:#1b1b1a;--mu:#6d6d68;--ac:#1d6fe0;--bd:#e2e2dc;--ok:#1a8a4a;--in:#efefe9}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#141413;--cd:#201f1e;--tx:#eeeeea;--mu:#9a9a94;--ac:#5aa0ff;--bd:#35332f;--ok:#4cc27d;--in:#2a2927}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#141413;--cd:#201f1e;--tx:#eeeeea;--mu:#9a9a94;--ac:#5aa0ff;--bd:#35332f;--ok:#4cc27d;--in:#2a2927}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding:12px 12px 90px;max-width:640px;margin:auto}
+select,input,button,textarea{font:inherit;color:var(--tx)}
+select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--cd)}
+.tabs{display:flex;gap:8px;margin:10px 0}.tabs button{flex:1;padding:9px;border:1px solid var(--bd);border-radius:10px;background:var(--cd)}.tabs .on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:12px;margin:10px 0}
+.card.done{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--cd))}.done .nm{color:var(--ok)}.set button.run{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:650}.set button.ok{background:var(--ok);color:#fff;border-color:var(--ok);font-weight:650}
+.set button{min-width:98px;border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:8px 10px}.nm{font-weight:650;font-size:16px}.ru,.sub{color:var(--mu);font-size:13px}.ln{margin-top:6px;font-size:14px}.ln b{color:var(--ac)}
+.cm{margin-top:6px;font-size:13px;border-left:3px solid var(--ac);padding-left:8px}
+.last{margin:8px 0;padding:8px;background:var(--in);border-radius:10px;font-size:13px}
+.set{display:flex;align-items:center;gap:8px;margin:6px 0}.set span{width:30px;color:var(--mu);font-size:13px}
+.set input{flex:1;min-width:0;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);text-align:center}
+button.s{border:1px solid var(--bd);background:var(--cd);border-radius:8px;padding:6px 10px;margin:4px 6px 0 0}
+button.p{width:100%;padding:13px;border:0;border-radius:12px;background:var(--ok);color:#fff;font-weight:650;margin-top:8px}
+#cl{position:fixed;inset:0;z-index:20;background:#12235e;display:flex;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px))}#cl[hidden]{display:none}#cv{position:absolute;inset:0}.bx2{position:relative;background:rgba(8,16,48,.75);color:#fff;border-radius:18px;padding:22px;max-width:420px;text-align:center}.bx2 h2{margin:8px 0}.bx2 p{margin:10px 0}
+#fq{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:9}#fq[hidden]{display:none}#fq .bx{background:var(--cd);border-radius:16px;padding:16px;width:100%;max-width:420px}
+#tb{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--ac);color:#fff;display:flex;justify-content:space-between;font-weight:650;font-size:18px}
+#tb[hidden]{display:none}#tb button{background:none;border:0;color:#fff;font-size:18px}
+textarea{width:100%;height:80px;box-sizing:border-box;background:var(--cd);border:1px solid var(--bd);border-radius:8px}
+.cf{width:100%;box-sizing:border-box;padding:9px;margin:4px 0;border:1px solid var(--bd);border-radius:8px;background:var(--bg)}
+</style></head><body><div id="app"></div><div id="cl" hidden><canvas id="cv"></canvas><div class="bx2"><div style="font-size:44px">🎆</div><h2>Вітаю! Програму завершено!</h2><p>Ти пройшов усі тренування: кожен підхід, кожен повтор і кожну хвилину відпочинку. Це дисципліна, яка відрізняє тих, хто мріє, від тих, хто робить.</p><p><b>Тепер ти заслужив тиждень відпочинку, але це тільки початок. 💪</b></p><button class="p" id="clx">Дякую!</button><button class="s" id="clc" style="width:100%;padding:10px;margin:10px 0 0;background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Закрити</button></div></div><div id="fq" hidden></div><div id="tb" hidden><span></span><button id="tx">✕</button></div>
+<script>
+const E={1:["Жим гантелей в наклоне","Жим гантелей на похилій лаві"],2:["Подтягивания","Підтягування"],3:["Жим штанги лежа","Жим штанги лежачи"],4:["Тяга гантелей в наклоне","Тяга гантелей в нахилі"],5:["Разгибания на трицепс в блоке стоя c прямой рукоятью","Розгинання на трицепс у блоці стоячи з прямою рукояттю"],6:["Подъем гантелей на бицепс сидя на наклонной скамье","Підйом гантелей на біцепс сидячи на похилій лаві"],7:["Разведение гантелей в наклоне (задняя дельта)","Розведення гантелей в нахилі (задня дельта)"],8:["Тяга блока к подбородку","Тяга блока до підборіддя"],9:["Махи гантелей в стороны стоя","Махи гантелями в сторони стоячи"],10:["Приседания со штангой","Присідання зі штангою"],11:["Сгибания лежа в тренажере на бицепс бедра","Згинання лежачи в тренажері на біцепс стегна"],12:["Разгибания сидя в тренажере","Розгинання сидячи в тренажері"],13:["Подъемы ног в висе","Підйоми ніг у висі"],14:["Вертикальная тяга блока широким хватом","Вертикальна тяга блока широким хватом"],15:["Жим штанги в наклоне","Жим штанги на похилій лаві"],16:["Горизонтальная тяга сидя в блоке (узкая рукоять)","Горизонтальна тяга сидячи в блоці (вузька рукоять)"],17:["Жим в Хаммере на верх груди","Жим у Хаммері на верх грудей"],18:["Подъем штанги на бицепс","Підйом штанги на біцепс"],19:["Разгибанния с EZ-штангой из-за головы лежа в наклоне","Розгинання з EZ-штангою з-за голови лежачи на нахилі"],20:["Молитва в блоке","Молитва в блоці"],21:["Жим гантелей сидя","Жим гантелей сидячи"],22:["Тяга штанги на заднюю дельту","Тяга штанги на задню дельту"],23:["Отведение рук в кроссовере (средняя дельта)","Відведення рук у кросовері (середня дельта)"],24:["Жим ногами","Жим ногами"],25:["Мертвая тяга","Мертва тяга"],26:["Подъемы на носки стоя","Підйоми на носки стоячи"],27:["Подтягивания параллельным хватом","Підтягування паралельним хватом"],28:["Тяга гантелей с упором в скамью","Тяга гантелей з упором у лаву"],29:["Тяга штанги к подбородку","Тяга штанги до підборіддя"],30:["Тяга каната в блоке на заднюю дельту","Тяга канату в блоці на задню дельту"],31:["Скручивания","Скручування"],32:["Сведение в кроссовере лежа на наклонной скамье","Зведення в кросовері лежачи на похилій лаві"],33:["Отжимания от скамьи с упором сзади","Віджимання від лави з упором ззаду"],34:["Молотки c гантелями","Молотки з гантелями"],35:["Подъем гантелей на бицепс c супинацией","Підйом гантелей на біцепс із супінацією"],36:["Разгибания на трицепс в блоке стоя c канатом","Розгинання на трицепс у блоці стоячи з канатом"],37:["Горизонтальная тяга сидя в блоке (широкая рукоять)","Горизонтальна тяга сидячи в блоці (широка рукоять)"],38:["Разгибания обеих рук с одной гантелью из-за головы","Розгинання обох рук з однією гантеллю з-за голови"],39:["Жим от груди в тренажере","Жим у тренажері на похилій (Incline Chest Press)"],40:["Тяга в тренажере сидя","Тяга в тренажері сидячи (Seated Row)"],41:["Разведение в тренажере (задняя дельта)","Розведення в тренажері (задня дельта)"],42:["Подъем рук перед собой в кроссовере (передняя дельта)","Підйом рук перед собою в кросовері (передня дельта)"],43:["Махи в сторону в кроссовере","Махи в сторону в кросовері"],45:["Жим сидя в тренажере на наклонной","Жим сидячи в тренажері на похилій"],46:["Разгибания на трицепс в кроссовере","Розгинання на трицепс у кросовері (яйця)"],47:["Жим сидя в тренажере","Жим сидячи в тренажері"],48:["Тяга в кроссовере на заднюю дельту","Тяга в кросовері (яйця) на задню дельту"],49:["Сведение (разведение) на грудь в тренажере","Зведення (розведення) на груди в тренажері"]};
+const C={a:["Концентрация на груди. Своди лопатки, отключай плечи. Полная амплитуда","Концентрація на грудях. Зводь лопатки, вимикай плечі. Повна амплітуда"],v:["Концентрация на груди. Своди лопатки, отключай плечи.","Концентрація на грудях. Зводь лопатки, вимикай плечі."],b:["Широкий хват. Хотя бы +2.5 кг. Если не можешь, то делай тягу блока.","Широкий хват. Хоча б +2,5 кг. Якщо не можеш — роби тягу блока."],c:["Поочередно, фиксируешь в верхней точке. Отключай бицепс при тяге","По черзі, фіксуєш у верхній точці. Вимикай біцепс при тязі"],d:["Четкое выполнение. Без лишних движений. Только разгибания рук","Чітке виконання. Без зайвих рухів. Лише розгинання рук"],e:["Без читинга. Полная амплитуда","Без читингу. Повна амплітуда"],f:["Неполная амплитуда (только на дельту)","Неповна амплітуда (лише на дельту)"],g:["Поднимай не выше уровня плеч. Руки шире плеч. Тяни локтями, а не кистями","Піднімай не вище рівня плечей. Руки ширше плечей. Тягни ліктями, а не кистями"],h:["Четкая техника. Концентрируйся на работе плеч, не поднимай трапециями","Чітка техніка. Концентруйся на роботі плечей, не піднімай трапеціями"],i:["Хорошая амплитуда. Контролируй отсутсвие отказов","Хороша амплітуда. Контролюй відсутність відмов"],j:["Равномерное движение в обе стороны","Рівномірний рух в обидва боки"],k:["Концентрация на спине. Без читинга, медленное выполнение","Концентрація на спині. Без читингу, повільне виконання"],l:["Своди лопатки, отключай плечи","Зводь лопатки, вимикай плечі"],m:["Работа спиной. Плечи опусти. В конечной точке прожимка","Працюй спиною. Плечі опусти. У кінцевій точці прожимка"],n:["Концентрация на верхе груди","Концентрація на верху грудей"],o:["В каждом повышаешь вес.","У кожному підході підвищуй вагу."],p:["В каждом повышаешь вес. Хорошая амплитуда. Контролируй отсутсвие отказов","У кожному підході підвищуй вагу. Хороша амплітуда. Контролюй відсутність відмов"],q:["Полная амплитуда.","Повна амплітуда."],r:["Неполная амплитуда (только на заднюю дельту)","Неповна амплітуда (лише на задню дельту)"],s:["Четкая техника. Концентрация на плечах","Чітка техніка. Концентрація на плечах"],t:["Полная амплитуда движения. Контролируй отсутсвие отказов","Повна амплітуда руху. Контролюй відсутність відмов"],u:["Соблюдай технику. Концентрация на бицепсе бедра","Дотримуйся техніки. Концентрація на біцепсі стегна"],w:["Четкая техника выполнения. Без отказов. Тяжелые веса","Чітка техніка виконання. Без відмов. Важкі ваги"],x:["Широкий хват. Доводи локти до параллели. Идеальная техника!","Широкий хват. Доводь лікті до паралелі. Ідеальна техніка!"],y:["Ограниченная амплитуда на заднюю дельту","Обмежена амплітуда на задню дельту"],z:["Поочередно, фиксируешь в верхней точке.","По черзі, фіксуєш у верхній точці."],A:["Локти поднимай повыше, чтобы работала именно дельта. Во втором подходе дропсет","Лікті піднімай вище, щоб працювала саме дельта. У другому підході дропсет"],B:["Прожимай грудь в верхней точке движения","Прожимай груди у верхній точці руху"],C:["Делаешь МАКСИМАЛЬНО технично, медленно БЕЗ НАПРЯГА. Просто для пампа без тяжелых весов","Робиш МАКСИМАЛЬНО технічно, повільно БЕЗ НАПРУГИ. Просто для пампу без важких ваг"]};
+const D1=[[39,"2x20|3x6-8",1,"a","3:00"],[2,"1xB|3x8-10",1,"b","2:40"],[3,"|2x10",2,"a","2:40"],[40,"|2x10",2,"c","2:20"],[5,"|3x8-10",1,"d","1:30"],[6,"|3x8-10",1,"e","1:30"]];
+const D3=[[41,"1x20|3x12",1,"f","1:30"],[42,"1x20|3x8-10",2,"","2:00"],[43,"|3x12",0,"h","1:30"],[24,"2x20|3x8",2,"i","3:00"],[11,"|2x12",2,"j","2:30"],[12,"|1x12",3,"j","2:00"],[13,"|4x15",2,"","1:00"]];
+const D5=[[14,"1x20|3x8-10",2,"k","2:30"],[45,"2x20|3x8",1,"l","2:50"],[16,"|2x10-12",1,"m","2:50"],[17,"|2x10",1,"n","2:30"],[18,"|3x12-10-8",1,"o","2:00"],[46,"|3x12-10-8",1,"p","2:00"]];
+const D8=[[47,"|3x12",2,"q","2:00"],[48,"1x20|3x12",2,"r","2:00"],[23,"1x20|3x10",0,"s","1:00"],[24,"2x20|3x12",2,"t","2:50"],[12,"|2x12",1,"j","2:30"],[26,"|7x20",1,"","0:10"]];
+const D10=[[3,"2x20|3x6-8",1,"v","3:00"],[27,"1xB|3x8-10",1,"b","2:40"],[39,"|2x10",2,"a","2:40"],[40,"|2x10",2,"c","2:20"],[5,"|3x8-10",1,"d","1:30"],[6,"|3x8-10",1,"e","1:30"]];
+const D12=[[24,"2x20|3x15",2,"i","3:00"],[47,"2x20|3x6-8",2,"w","2:00"],[42,"2x20|3x8-10",3,"","2:00"],[41,"|3x10-12",1,"y","2:00"],[23,"|3x",0,"z","1:30"],[30,"|2x12+дропсет",2,"A","1:00"],[31,"|4x15",2,"","1:00"]];
+const D15=[[39,"2x20|3x6-8",1,"a","3:00"],[2,"1xB|3x8-10",1,"b","2:40"],[49,"|2x10",2,"B","2:40"],[40,"|2x10",2,"c","2:20"],[33,"|3x8-10",1,"q","1:30"],[18,"|3x8-10",1,"e","1:30"]];
+const D19=[[14,"1x20|3x8-10",2,"k","2:30"],[15,"2x20|3x8",1,"l","2:50"],[16,"|2x10-12",1,"m","2:50"],[17,"|2x10",1,"n","2:30"],[34,"|3x12-10-8",1,"o","2:00"],[19,"|3x12-10-8",1,"p","2:00"],[20,"|3x15",1,"","1:00"]];
+const LA=[[24,"2x20|3x15",8,"C","1:50"],[14,"|3x15",8,"C","1:30"],[45,"|3x15",8,"C","1:30"],[35,"|3x15",8,"C","1:30"],[36,"|3x15",8,"C","1:30"],[43,"|3x15",8,"C","1:30"]];
+const LB=[[12,"2x20|3x15",8,"C","1:30"],[37,"|3x15",8,"C","1:30"],[3,"|3x15",8,"C","1:30"],[18,"|3x15",8,"C","1:30"],[38,"|3x15",8,"C","1:30"],[42,"|3x15",8,"C","1:30"]];
+const A=["Грудь+спина+руки","Груди+спина+руки"],B=["Ноги+плечи","Ноги+плечі"];
+const W=[{id:"d1",n:"День 1",t:A,c:20,x:D1},{id:"d3",n:"День 3",t:B,c:0,x:D3},{id:"d5",n:"День 5",t:A,c:20,x:D5},{id:"d8",n:"День 8",t:B,c:0,x:D8},{id:"d10",n:"День 10",t:A,c:0,x:D10},{id:"d12",n:"День 12",t:B,c:20,x:D12},{id:"d15",n:"День 15",t:A,c:0,x:D15},{id:"d17",n:"День 17",t:B,c:0,x:D3},{id:"d19",n:"День 19",t:A,c:20,x:D19},{id:"la",n:"Легкий тиждень, день 1",t:["Тренировка «А»","Тренування «А»"],c:25,x:LA},{id:"lb",n:"Легкий тиждень, день 4",t:["Тренировка «В»","Тренування «В»"],c:25,x:LB}];
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let S;try{S=JSON.parse(localStorage.getItem("wl")||"{}")}catch(e){S={}}
+S.h=S.h||{};S.dr=S.dr||{};
+const save0=()=>{try{localStorage.setItem("wl",JSON.stringify(S))}catch(e){}};
+let CF={};try{CF=JSON.parse(localStorage.getItem("wlcfg")||"{}")}catch(e){}
+let lh="",tmr;
+const dat=()=>JSON.stringify({h:S.h,fn:S.fn||{},cel:S.cel||0});
+const save=()=>{if(CF.c&&dat()!==lh){S.ts=Date.now();lh=dat();clearTimeout(tmr);tmr=setTimeout(push,800)}save0()};
+const hd=()=>{const h={apikey:CF.k,"Content-Type":"application/json"};if(/^eyJ/.test(CF.k))h.Authorization="Bearer "+CF.k;return h};
+const ss=t=>{const e=document.getElementById("sy");if(e)e.textContent=t};
+const mg=(a,b)=>{const o={...a};for(const k in b){const m=new Map();[...(o[k]||[]),...b[k]].forEach(x=>m.set(x.t,x));o[k]=[...m.values()].sort((x,y)=>x.t-y.t)}return o};
+async function push(){if(!CF.u||!CF.k||!CF.c)return;try{const r=await fetch(CF.u+"/rest/v1/wl",{method:"POST",headers:{...hd(),Prefer:"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:CF.c,data:JSON.parse(dat()),updated_at:new Date(S.ts||Date.now()).toISOString()})});ss(r.ok?"Синхронізовано "+new Date().toLocaleTimeString("uk-UA"):"Помилка "+r.status)}catch(e){ss("Немає зв’язку")}}
+async function pull(){if(!CF.u||!CF.k||!CF.c)return;try{const r=await fetch(CF.u+"/rest/v1/wl?id=eq."+encodeURIComponent(CF.c)+"&select=data,updated_at",{headers:hd()});if(!r.ok){ss("Помилка "+r.status);return}const a=await r.json();if(a[0]&&Date.parse(a[0].updated_at)>(S.ts||0)){const d=a[0].data,first=!S.ts;S.h=first?mg(S.h,d.h||{}):(d.h||{});S.fn={...(first?S.fn||{}:{}),...(d.fn||{})};S.cel=d.cel||S.cel||0;S.ts=first?Date.now():Date.parse(a[0].updated_at);lh=dat();save0();render();if(first)await push();else ss("Дані завантажено з хмари")}else{lh=dat();if(!a[0])await push();else if((S.ts||0)>Date.parse(a[0].updated_at))await push();else ss("Синхронізовано")}}catch(e){ss("Немає зв’язку")}}
+const R=t=>{const[m,s]=t.split(":");return +m*60+ +s},fm=s=>{const m=Math.floor(s/60),r=s%60;return(m?m+" хв":"")+(m&&r?" ":"")+(r?r+" с":"")};
+const P=sp=>{const[a,b]=sp.split("|"),f=s=>{if(!s)return null;const[n,r]=s.split("x");return{n:+n,r:r==="B"?"в блоці":r||"—"}};return{w:f(a),s:f(b)}};
+const dt=t=>new Date(t).toLocaleDateString("uk-UA",{day:"2-digit",month:"2-digit"});
+const fs=a=>(a||[]).map(x=>esc(x[0]||"–")+"×"+esc(x[1]||"–")).join(", ");
+const last=k=>{const a=S.h[k]||[];return a[a.length-1]};
+const isDn=(d,i)=>!!(S.dn&&S.dn[d]&&S.dn[d][i]);let cur="d1",tab="w",open=null;
+function viewW(w){
+ let h=`<select id="sel">${W.map(x=>`<option value="${x.id}"${x.id===cur?" selected":""}>${x.n} · ${x.t[1]}</option>`).join("")}</select><div class="sub" style="margin:6px 2px">кг × повтори</div>`;
+ const dr=S.dr[w.id]||{};
+ w.x.forEach((it,i)=>{
+  const[ek,sp,pdo,ck,rt]=it,p=P(sp),L=last(ek),d=dr[i]||{},sec=R(rt),c=ck?C[ck]:null;
+  const row=(k,n,lab)=>{let r="";for(let j=0;j<n;j++){const lv=(L&&L[k]&&L[k][j])||[],v=(d[k]&&d[k][j])||[];r+=`<div class="set"><span>${lab}${j+1}</span><input inputmode="decimal" data-k="${k}" data-j="${j}" data-f="0" placeholder="${esc(lv[0]||"кг")}" value="${esc(v[0]||"")}"><i>×</i><input inputmode="numeric" data-k="${k}" data-j="${j}" data-f="1" placeholder="${esc(lv[1]||"повт")}" value="${esc(v[1]||"")}"><button data-sec="${sec}" data-tid="${w.id}-${i}${k}${j}"${k==="s"&&j===n-1?' data-last="1"':""}>⏱ ${fm(sec)}</button></div>`}return r};
+  h+=`<div class="card${isDn(w.id,i)?" done":""}" data-i="${i}"><div class="nm">${isDn(w.id,i)?"✓ ":""}${i+1}. ${E[ek][1]}</div>`;
+  if(p.w)h+=`<div class="ln"><b>Розминочні:</b> ${p.w.n} × ${p.w.r} · відпочинок між ними ${fm(sec)}</div>`;
+  h+=`<div class="ln"><b>Робочі:</b> ${p.s.n} × ${p.s.r} · відпочинок ${fm(sec)} · ПДВ ${pdo}</div>`;
+  if(c)h+=`<div class="cm">${c[1]}</div>`;
+  h+=`<div class="last">${L?`Минулого разу (${dt(L.t)}): ${L.w.length?"розм. "+fs(L.w)+"; ":""}роб. ${fs(L.s)}<br><button class="s" data-fill="1">⤵ Підставити минуле</button>`:"Ще немає записів для цієї вправи"}</div>`;
+  if(p.w)h+=row("w",p.w.n,"Р");
+  h+=row("s",p.s.n,"№")+`<button class="s" data-done="${i}">${isDn(w.id,i)?"↩ Скасувати":"✓ Вправу зроблено"}</button></div>`;
+ });
+ 
+ return h+`<button class="p" data-fin="1">✓ Завершити та зберегти тренування</button>`;
+}
+function viewP(){
+ const ks=Object.keys(S.h).filter(k=>S.h[k].length);let h=(S.cel?'<button class="p" data-cel="1" style="margin:0 0 10px">🎆 Показати привітання</button>':"");
+ if(!ks.length)h+=`<div class="card sub">Поки що немає збережених тренувань.</div>`;
+ ks.forEach(k=>{
+  const a=S.h[k],tops=a.map(x=>Math.max(0,...x.s.map(y=>parseFloat(String(y[0]).replace(",","."))||0)));
+  h+=`<div class="card"><div class="nm" data-ex="${k}" style="cursor:pointer">${E[k]?E[k][1]:esc(k)}</div><div class="ru">Макс. вага: ${tops.slice(-8).join(" → ")} кг</div>`;
+  if(open===k)h+=a.map((x,j)=>`<div class="ln">${dt(x.t)}: ${x.w.length?"розм. "+fs(x.w)+"; ":""}роб. ${fs(x.s)} <button class="s" data-del="${k}:${j}">✕</button></div>`).reverse().join("");
+  h+=`</div>`;
+ });
+ return h+`<div class="card"><div class="nm">Хмарна синхронізація</div><div class="sub" style="margin:4px 0 8px">Supabase: адреса проєкту, ключ anon і твій секретний код (однаковий на всіх пристроях)</div><input class="cf" id="cu" placeholder="https://xxxx.supabase.co" value="${esc(CF.u||"")}"><input class="cf" id="ck" placeholder="anon public key" value="${esc(CF.k||"")}"><input class="cf" id="cc" placeholder="секретний код, напр. pavlo-7391-xk2" value="${esc(CF.c||"")}"><button class="s" id="csv">Зберегти й синхронізувати</button><div class="sub" id="sy"></div></div><div class="card"><div class="nm">Резервна копія</div><div class="ru">Скопіюй текст для збереження або встав свій і натисни «Імпорт».</div><textarea id="bk">${esc(JSON.stringify(S.h))}</textarea><button class="s" id="imp">Імпорт</button></div>`;
+}
+function render(){
+ const w=W.find(x=>x.id===cur);
+ $("#app").innerHTML=`<div class="tabs"><button class="${tab==="w"?"on":""}" data-t="w">Тренування</button><button class="${tab==="p"?"on":""}" data-t="p">Прогрес</button></div>`+(tab==="w"?viewW(w):viewP());
+}
+let ti,ac,tid=null,tl="";
+function beep(){try{const n=ac.currentTime;[0,.35,.7].forEach(o=>{const x=ac.createOscillator(),g=ac.createGain();x.frequency.value=880;g.gain.setValueAtTime(.3,n+o);g.gain.exponentialRampToValueAtTime(.001,n+o+.25);x.connect(g);g.connect(ac.destination);x.start(n+o);x.stop(n+o+.26)})}catch(x){}}
+const tb=()=>tid&&document.querySelector('[data-tid="'+tid+'"]');
+function tstop(){clearInterval(ti);const b=tb();if(b){b.textContent=tl;b.className=""}tid=null}
+let raf;
+function fw(){const c=$("#cv"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;let P=[],n=0;const bang=()=>{const cx=Math.random()*c.width,cy=Math.random()*c.height*.55+40,h=Math.random()*360;for(let i=0;i<60;i++){const a=Math.random()*6.283,s=Math.random()*5+1.5;P.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s,l:1,h})}};const f=()=>{x.fillStyle="rgba(18,35,94,.2)";x.fillRect(0,0,c.width,c.height);if(n++%35===0)bang();P=P.filter(p=>p.l>0);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.04;p.vx*=.985;p.l-=.011;x.fillStyle="hsla("+p.h+",90%,60%,"+p.l+")";x.fillRect(p.x,p.y,3,3)});raf=requestAnimationFrame(f)};cancelAnimationFrame(raf);f()}
+function cel(){$("#cl").hidden=false;fw()}
+const MAN='<svg viewBox="0 0 60 80" width="48" height="64"><rect x="21" y="60" width="8" height="18" fill="#f0b98d"/><rect x="31" y="60" width="8" height="18" fill="#f0b98d"/><rect x="2" y="22" width="14" height="8" fill="#f0b98d"/><rect x="2" y="8" width="8" height="16" fill="#f0b98d"/><rect x="44" y="22" width="14" height="8" fill="#f0b98d"/><rect x="50" y="8" width="8" height="16" fill="#f0b98d"/><circle cx="9" cy="20" r="6" fill="#e0a074"/><circle cx="51" cy="20" r="6" fill="#e0a074"/><circle cx="6" cy="7" r="5" fill="#f0b98d"/><circle cx="54" cy="7" r="5" fill="#f0b98d"/><path d="M14 22h32l-6 28H20z" fill="#f0b98d"/><rect x="20" y="50" width="20" height="12" fill="#c0392b"/><circle cx="30" cy="13" r="8" fill="#f0b98d"/><path d="M22 11q8-9 16 0v-3q-8-7-16 0z" fill="#3b2a1a"/></svg>';
+function pump(){const q=$("#cl"),r=$("#clx").getBoundingClientRect();for(let i=0;i<6;i++){const e=document.createElement("div");e.innerHTML=MAN;e.style.cssText="position:fixed;z-index:30;pointer-events:none;left:"+(r.left+r.width/2-24)+"px;top:"+(r.top-20)+"px";q.appendChild(e);const dx=(Math.random()-.5)*440,dy=-(120+Math.random()*300),rt=(Math.random()-.5)*720,t="translate("+dx+"px,"+dy+"px) rotate("+rt+"deg) scale(1.1)";e.animate([{transform:"translate(0,0) rotate(0deg) scale(.4)",opacity:1},{transform:t,opacity:1,offset:.7},{transform:t,opacity:0}],{duration:1300+Math.random()*700,easing:"ease-out"}).onfinish=()=>e.remove()}}
+$("#clx").onclick=pump;
+$("#clc").onclick=()=>{$("#cl").hidden=true;cancelAnimationFrame(raf)};
+function ask(d,i){const w=W.find(x=>x.id===d),q=$("#fq");q.innerHTML=`<div class="bx"><div class="nm">Фініш вправи?</div><div class="sub" style="margin:6px 0 12px">${E[w.x[i][0]][1]}</div><button class="p" data-y="1">✓ Так, вправу зроблено</button><button class="s" data-n="1" style="width:100%;padding:12px;margin:8px 0 0">Ще ні</button></div>`;q.dataset.d=d;q.dataset.i=i;q.hidden=false}
+$("#fq").onclick=e=>{const q=$("#fq"),t=e.target.dataset;if(t.y){const m=(S.dn=S.dn||{}),o=(m[q.dataset.d]=m[q.dataset.d]||{});o[q.dataset.i]=true;save();q.hidden=true;render()}else if(t.n||e.target===q)q.hidden=true};
+function tm(b){const same=tid&&b.dataset.tid===tid;tstop();if(same)return;
+ try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(x){}
+ const id=b.dataset.tid,last=b.dataset.last,m=id.match(/^(.+)-(\d+)[ws]\d+$/),e=Date.now()+ +b.dataset.sec*1000;tid=id;tl=b.textContent;
+ const u=()=>{const r=Math.max(0,Math.round((e-Date.now())/1000)),x=tb();if(x)x.className=r?"run":"ok";if(x)x.textContent=r?"⏱ "+Math.floor(r/60)+":"+String(r%60).padStart(2,"0"):"✅ Готово";if(!r){clearInterval(ti);beep();if(last&&m&&!isDn(m[1],+m[2]))ask(m[1],+m[2]);try{navigator.vibrate&&navigator.vibrate([300,100,300])}catch(z){}setTimeout(()=>{if(tid===id)tstop()},4000)}};u();ti=setInterval(u,250)}
+
+function fin(){
+ const w=W.find(x=>x.id===cur);let n=0;
+ w.x.forEach((it,i)=>{const o=(S.dr[cur]||{})[i];if(!o)return;const f=a=>(a||[]).filter(x=>x&&(x[0]||x[1])),ww=f(o.w),ss=f(o.s);if(!ww.length&&!ss.length)return;(S.h[it[0]]=S.h[it[0]]||[]).push({t:Date.now(),d:cur,w:ww,s:ss});n++});
+ if(n)(S.fn=S.fn||{})[cur]=1;delete S.dr[cur];if(S.dn)delete S.dn[cur];const all=W.every(x=>S.fn&&S.fn[x.id])&&!S.cel;if(all)S.cel=1;save();tab="p";render();if(all)setTimeout(cel,300);
+}
+const app=$("#app");
+app.addEventListener("change",e=>{if(e.target.id==="sel"){cur=e.target.value;render()}});
+app.addEventListener("input",e=>{const t=e.target,d=t.dataset;if(d.k===undefined)return;const i=t.closest(".card").dataset.i,dd=(S.dr[cur]=S.dr[cur]||{}),o=(dd[i]=dd[i]||{w:[],s:[]}),a=o[d.k];while(a.length<=+d.j)a.push(["",""]);a[d.j][d.f]=t.value;save()});
+app.addEventListener("click",e=>{const t=e.target,d=t.dataset;
+ if(d.t){tab=d.t;render()}
+ else if(d.sec)tm(t);
+ else if(d.fill){t.closest(".card").querySelectorAll(".set input").forEach(x=>{if(!x.value&&/^[\d.,]+$/.test(x.placeholder)){x.value=x.placeholder;x.dispatchEvent(new Event("input",{bubbles:true}))}})}
+ else if(d.done!==undefined){const m=(S.dn=S.dn||{}),o=(m[cur]=m[cur]||{});o[d.done]=!o[d.done];save();render()}
+ else if(d.cel)cel();
+ else if(d.fin)fin();
+ else if(d.ex){open=open===d.ex?null:d.ex;render()}
+ else if(d.del){const[k,j]=d.del.split(":");S.h[k].splice(+j,1);save();render()}
+ else if(t.id==="csv"){CF={u:$("#cu").value.trim().replace(/\/$/,""),k:$("#ck").value.trim(),c:$("#cc").value.trim()};try{localStorage.setItem("wlcfg",JSON.stringify(CF))}catch(x){}pull()}
+ else if(t.id==="imp"){try{const o=JSON.parse($("#bk").value);if(o&&typeof o==="object"){S.h=o;save();render()}}catch(x){}}
+});
+render();pull();document.addEventListener("visibilitychange",()=>{if(!document.hidden)pull()});
+</script></body></html>
